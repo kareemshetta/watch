@@ -40,11 +40,10 @@ class MovieDetailContent extends StatelessWidget {
       final movie = BlocProvider.of<MovieDetailBloc>(context).movieDetailed;
       final recommendationList =
           BlocProvider.of<MovieDetailBloc>(context).recommendationList;
-      print('moviedetail:...$movie');
       return movie == null ||
               (recommendationList.isEmpty &&
                   state is! GetRecommendationSuccessState)
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : CustomScrollView(
@@ -238,7 +237,6 @@ Widget _showRecommendations() {
       builder: (context, state) {
     final recommendations =
         BlocProvider.of<MovieDetailBloc>(context).recommendationList;
-    print('recommendationList$recommendations');
     return SliverGrid(
       delegate: SliverChildBuilderDelegate(
         (context, index) {

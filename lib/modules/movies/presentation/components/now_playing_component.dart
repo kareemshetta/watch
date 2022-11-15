@@ -17,20 +17,23 @@ class NowPlayingComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MoviesBloc, MoviesState>(
-      buildWhen: (previous, current) =>
-          previous.nowPlayingState != current.nowPlayingState,
-      builder: (context, state) {
-        switch (state.nowPlayingState) {
-          case RequestState.loading:
-            return SizedBox(
+        buildWhen: (previous, current) => previous != current,
+        builder: (context, state) {
+          if (state is LoadingGetNowPlayingMoviesState) {
+            return const SizedBox(
               height: 400,
               child: Center(
                 child: CircularProgressIndicator(),
               ),
             );
-
-          case RequestState.loaded:
-            final moviesList = state.nowPlayingMovies;
+          } else if (state is GetPopularErrorState) {
+            return const SizedBox(
+              height: 400,
+              child: Center(child: Icon(Icons.error)),
+            );
+          } else {
+            final moviesList =
+                BlocProvider.of<MoviesBloc>(context).nowPlayingMovies;
             return FadeIn(
               duration: const Duration(milliseconds: 500),
               child: CarouselSlider(
@@ -121,14 +124,7 @@ class NowPlayingComponent extends StatelessWidget {
                 ).toList(),
               ),
             );
-
-          case RequestState.error:
-            return const SizedBox(
-              height: 400,
-              child: Center(child: Icon(Icons.error)),
-            );
-        }
-      },
-    );
+          }
+        });
   }
 }

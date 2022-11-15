@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       title: AppString.appTitle,
       theme: ThemeData.dark()
           .copyWith(scaffoldBackgroundColor: Colors.grey.shade900),
-      home: const HomePage(),
+      home: const MoviesScreen(),
     );
   }
 }
