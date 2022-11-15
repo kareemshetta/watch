@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watch/core/services/service_locator.dart';
 import 'package:watch/core/utils/app_string.dart';
-import 'package:watch/modules/movies/domain/entities/movie.dart';
-import 'package:watch/modules/movies/presentation/screens/home_screen.dart';
 import 'package:watch/modules/movies/presentation/screens/movies_screen.dart';
 
 import 'modules/movies/presentation/controllers/bloc_observer.dart';
