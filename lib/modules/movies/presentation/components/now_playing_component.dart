@@ -3,11 +3,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:watch/core/utils/app_string.dart';
 import 'package:watch/modules/movies/presentation/controllers/movies_bloc.dart';
 
 import '../../../../core/utils/constants.dart';
-import '../../../../core/utils/enums.dart';
 import '../controllers/movies_states.dart';
 import '../screens/movie_detail_screen.dart';
 
@@ -106,10 +106,12 @@ class NowPlayingComponent extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 16.0),
                                   child: Text(
-                                    item.title,
+                                    item.title.toUpperCase(),
                                     textAlign: TextAlign.center,
-                                    style: const TextStyle(
+                                    style: GoogleFonts.poppins(
                                       fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 1.2,
                                       color: Colors.white,
                                     ),
                                   ),
