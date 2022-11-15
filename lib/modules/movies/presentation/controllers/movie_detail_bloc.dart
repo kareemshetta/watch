@@ -12,11 +12,32 @@ import '../../domain/usecase/get_recommendation_use_case.dart';
 part 'movie_detail_event.dart';
 part 'movie_detail_state.dart';
 
+//new changes
 class MovieDetailBloc extends Bloc<MovieDetailEvent, MovieDetailState> {
   GetMovieDetailUseCase getMovieDetailUseCase;
   GetRecommendationUseCase getRecommendationUseCase;
-  MovieDetailed? movieDetailed;
-  List<Movie> recommendationList = [];
+  MovieDetailed? _movieDetailed;
+
+  MovieDetailed? get movieDetailed {
+    if (_movieDetailed == null) {
+      return null;
+    } else {
+      return MovieDetailed(
+        title: _movieDetailed!.title,
+        runTime: _movieDetailed!.runTime,
+        releaseDate: _movieDetailed!.releaseDate,
+        backdropPath: _movieDetailed!.backdropPath,
+        genre: _movieDetailed!.genre,
+        id: _movieDetailed!.id,
+        overview: _movieDetailed!.overview,
+        voteAverage: _movieDetailed!.voteAverage,
+      );
+    }
+  }
+
+  List<Movie> _recommendationList = [];
+
+  List<Movie> get recommendationList => [..._recommendationList];
 
   MovieDetailBloc(this.getMovieDetailUseCase, this.getRecommendationUseCase)
       : super(InitialMovieDetailState()) {
@@ -30,7 +51,7 @@ class MovieDetailBloc extends Bloc<MovieDetailEvent, MovieDetailState> {
     final result =
         await getMovieDetailUseCase(MovieDetailParameter(id: event.id));
     result.fold((l) => emit(GetMovieDetailErrorState(l.message)), (r) {
-      movieDetailed = r;
+      _movieDetailed = r;
       emit(GetMovieDetailSuccessState(r));
     });
   }
@@ -41,7 +62,7 @@ class MovieDetailBloc extends Bloc<MovieDetailEvent, MovieDetailState> {
     final result =
         await getRecommendationUseCase(RecommendationParameter(event.id));
     result.fold((l) => emit(GetRecommendationErrorState(l.message)), (r) {
-      recommendationList = r;
+      _recommendationList = r;
       print('reighttttt$r');
       emit(GetRecommendationSuccessState(r));
     });

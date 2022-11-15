@@ -1,50 +1,10 @@
 part of 'movie_detail_bloc.dart';
 
-// class MovieDetailState extends Equatable {
-//   final MovieDetailed? movieDetailed;
-//   final String movieDetailMessage;
-//   final RequestState movieDetailState;
-//   final List<Movie> recommendation;
-//   final RequestState recommendedMoviesState;
-//   final String recommendedMovieMessage;
-//   const MovieDetailState(
-//       {this.movieDetailed,
-//       this.movieDetailMessage = '',
-//       this.movieDetailState = RequestState.loading,
-//       this.recommendation = const [],
-//       this.recommendedMovieMessage = '',
-//       this.recommendedMoviesState = RequestState.loading});
-//
-//   MovieDetailState copyWith({
-//     MovieDetailed? movieDetailed,
-//     String? movieDetailMessage,
-//     RequestState? movieDetailState,
-//     List<Movie>? recommendation,
-//     RequestState? recommendedMoviesState,
-//     String? recommendedMovieMessage,
-//   }) {
-//     return MovieDetailState(
-//         movieDetailState: movieDetailState ?? this.movieDetailState,
-//         movieDetailed: movieDetailed ?? this.movieDetailed,
-//         movieDetailMessage: movieDetailMessage ?? this.movieDetailMessage,
-//         recommendation: recommendation ?? this.recommendation,
-//         recommendedMovieMessage:
-//             recommendedMovieMessage ?? this.recommendedMovieMessage,
-//         recommendedMoviesState:
-//             recommendedMoviesState ?? this.recommendedMoviesState);
-//   }
-//
-//   @override
-//   // TODO: implement props
-//   List<Object?> get props =>
-//       [movieDetailed, movieDetailMessage, movieDetailState];
-// }
-
+// abstract class for
 abstract class MovieDetailState extends Equatable {}
 
 class InitialMovieDetailState extends MovieDetailState {
   @override
-  // TODO: implement props
   List<Object?> get props => [];
 }
 

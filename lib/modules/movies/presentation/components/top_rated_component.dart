@@ -4,10 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:watch/modules/movies/presentation/screens/movie_detail_screen.dart';
-
 import '../../../../core/utils/constants.dart';
-import '../../../../core/utils/dummy.dart';
-import '../../../../core/utils/enums.dart';
 import '../controllers/movies_bloc.dart';
 import '../controllers/movies_states.dart';
 
@@ -17,20 +14,25 @@ class TopRatedComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MoviesBloc, MoviesState>(
-      buildWhen: (previous, current) =>
-          previous.topRatedState != current.topRatedState,
-      builder: (context, state) {
-        switch (state.topRatedState) {
-          case RequestState.loading:
+        buildWhen: (previous, current) => previous != current,
+        builder: (context, state) {
+          if (state is LoadingGetTopRatedMoviesState) {
             return const SizedBox(
               height: 170,
               child: Center(
                 child: CircularProgressIndicator(),
               ),
             );
-
-          case RequestState.loaded:
-            final moviesList = state.topRatedMovies;
+          } else if (state is GetTopRatedErrorState) {
+            return const SizedBox(
+              height: 170,
+              child: Center(
+                child: Text('check your connection'),
+              ),
+            );
+          } else {
+            final moviesList =
+                BlocProvider.of<MoviesBloc>(context).topRatedMovies;
             return FadeIn(
               duration: const Duration(milliseconds: 500),
               child: SizedBox(
@@ -105,16 +107,7 @@ class TopRatedComponent extends StatelessWidget {
                 ),
               ),
             );
-            break;
-          case RequestState.error:
-            return const SizedBox(
-              height: 170,
-              child: Center(
-                child: Text('check your connection'),
-              ),
-            );
-        }
-      },
-    );
+          }
+        });
   }
 }

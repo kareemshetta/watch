@@ -40,11 +40,10 @@ class MovieDetailContent extends StatelessWidget {
       final movie = BlocProvider.of<MovieDetailBloc>(context).movieDetailed;
       final recommendationList =
           BlocProvider.of<MovieDetailBloc>(context).recommendationList;
-      print('moviedetail:...$movie');
       return movie == null ||
               (recommendationList.isEmpty &&
                   state is! GetRecommendationSuccessState)
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : CustomScrollView(
@@ -238,7 +237,6 @@ Widget _showRecommendations() {
       builder: (context, state) {
     final recommendations =
         BlocProvider.of<MovieDetailBloc>(context).recommendationList;
-    print('recommendationList$recommendations');
     return SliverGrid(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
@@ -280,48 +278,3 @@ Widget _showRecommendations() {
     );
   });
 }
-
-// print(state.recommendedMoviesState);
-// print('recommendation build');
-// final recommendations = state.recommendation;
-// print('recommendation:$recommendations');
-// return SliverGrid(
-//   delegate: SliverChildBuilderDelegate(
-//     (context, index) {
-//       final recommendation = recommendations[index];
-//       return FadeInUp(
-//         from: 20,
-//         duration: const Duration(milliseconds: 500),
-//         child: ClipRRect(
-//           borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-//           child: CachedNetworkImage(
-//             imageUrl:
-//                 concatImagePath(recommendations[index].backdropPath!),
-//             placeholder: (context, url) => Shimmer.fromColors(
-//               baseColor: Colors.grey[850]!,
-//               highlightColor: Colors.grey[800]!,
-//               child: Container(
-//                 height: 170.0,
-//                 width: 120.0,
-//                 decoration: BoxDecoration(
-//                   color: Colors.black,
-//                   borderRadius: BorderRadius.circular(8.0),
-//                 ),
-//               ),
-//             ),
-//             errorWidget: (context, url, error) => const Icon(Icons.error),
-//             height: 180.0,
-//             fit: BoxFit.cover,
-//           ),
-//         ),
-//       );
-//     },
-//     childCount: recommendations.length,
-//   ),
-//   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-//     mainAxisSpacing: 8.0,
-//     crossAxisSpacing: 8.0,
-//     childAspectRatio: 0.7,
-//     crossAxisCount: 3,
-//   ),
-// );

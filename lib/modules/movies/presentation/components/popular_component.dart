@@ -6,7 +6,6 @@ import 'package:shimmer/shimmer.dart';
 import 'package:watch/modules/movies/presentation/controllers/movies_bloc.dart';
 import 'package:watch/modules/movies/presentation/controllers/movies_states.dart';
 import '../../../../core/utils/constants.dart';
-import '../../../../core/utils/enums.dart';
 import '../screens/movie_detail_screen.dart';
 
 class PopularComponent extends StatelessWidget {
@@ -14,104 +13,99 @@ class PopularComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MoviesBloc, MoviesState>(
-      buildWhen: (previous, current) {
-        return previous.popularState != current.popularState;
-      },
-      builder: (context, state) {
-        final moviesList = state.popularMovies;
-        switch (state.popularState) {
-          case RequestState.loading:
-            return const SizedBox(
-              height: 170,
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          case RequestState.loaded:
-            return FadeIn(
-              duration: const Duration(milliseconds: 500),
-              child: SizedBox(
-                height: 170.0,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  itemCount: moviesList.length,
-                  itemBuilder: (context, index) {
-                    final movie = moviesList[index];
-                    return Container(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (context) {
-                            return MovieDetailScreen(id: moviesList[index].id);
-                          }));
-                        },
-                        child: ClipRRect(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(8.0)),
-                          child: Stack(
-                            alignment: AlignmentDirectional.center,
-                            children: [
-                              CachedNetworkImage(
+    return BlocBuilder<MoviesBloc, MoviesState>(buildWhen: (previous, current) {
+      return previous != current;
+    }, builder: (context, state) {
+      if (state is LoadingGetPopularMoviesState) {
+        return const SizedBox(
+          height: 170,
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      } else if (state is GetPopularErrorState) {
+        return const SizedBox(
+          height: 170,
+          child: Center(
+            child: Text('check your connection'),
+          ),
+        );
+      } else {
+        final moviesList = BlocProvider.of<MoviesBloc>(context).popularMovies;
+        return FadeIn(
+          duration: const Duration(milliseconds: 500),
+          child: SizedBox(
+            height: 170.0,
+            child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              itemCount: moviesList.length,
+              itemBuilder: (context, index) {
+                final movie = moviesList[index];
+                return Container(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return MovieDetailScreen(id: moviesList[index].id);
+                      }));
+                    },
+                    child: ClipRRect(
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(8.0)),
+                      child: Stack(
+                        alignment: AlignmentDirectional.center,
+                        children: [
+                          CachedNetworkImage(
+                            width: 120.0,
+                            height: 170,
+                            fit: BoxFit.cover,
+                            imageUrl: concatImagePath(movie.backdropPath!),
+                            placeholder: (context, url) => Shimmer.fromColors(
+                              baseColor: Colors.grey[850]!,
+                              highlightColor: Colors.grey[800]!,
+                              child: Container(
+                                height: 170.0,
                                 width: 120.0,
-                                height: 170,
-                                fit: BoxFit.cover,
-                                imageUrl: concatImagePath(movie.backdropPath!),
-                                placeholder: (context, url) =>
-                                    Shimmer.fromColors(
-                                  baseColor: Colors.grey[850]!,
-                                  highlightColor: Colors.grey[800]!,
-                                  child: Container(
-                                    height: 170.0,
-                                    width: 120.0,
-                                    decoration: BoxDecoration(
-                                      color: Colors.black,
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                  ),
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
                               ),
-                              FittedBox(
-                                child: Container(
-                                  width: 120,
-                                  padding: EdgeInsets.symmetric(vertical: 8),
-                                  decoration: BoxDecoration(
-                                      color: Colors.black54,
-                                      borderRadius: BorderRadius.circular(8.0)),
-                                  child: Center(
-                                    child: Text(
-                                      movie.title,
-                                      textAlign: TextAlign.center,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 14),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
+                            ),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
                           ),
-                        ),
+                          FittedBox(
+                            child: Container(
+                              width: 120,
+                              padding: EdgeInsets.symmetric(vertical: 8),
+                              decoration: BoxDecoration(
+                                  color: Colors.black54,
+                                  borderRadius: BorderRadius.circular(8.0)),
+                              child: Center(
+                                child: Text(
+                                  movie.title,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 14),
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
-                    );
-                  },
-                ),
-              ),
-            );
-          case RequestState.error:
-            return const SizedBox(
-              height: 170,
-              child: Center(
-                child: Text('check your connection'),
-              ),
-            );
-        }
-      },
-    );
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      }
+    });
   }
 }
