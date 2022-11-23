@@ -4,19 +4,36 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:watch/modules/movies/presentation/controllers/movies_bloc.dart';
+import 'package:watch/modules/movies/presentation/controllers/movies_events.dart';
 import 'package:watch/modules/movies/presentation/controllers/movies_states.dart';
 import '../../../../core/utils/constants.dart';
 import '../screens/movie_detail_screen.dart';
 
-class PopularComponent extends StatelessWidget {
-  const PopularComponent({Key? key}) : super(key: key);
+class PopularComponent extends StatefulWidget {
+  PopularComponent({Key? key}) : super(key: key);
+
+  @override
+  State<PopularComponent> createState() => _PopularComponentState();
+}
+
+class _PopularComponentState extends State<PopularComponent> {
+  ScrollController scrollController = ScrollController();
+
+  void setUpScrollController() {
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >
+          (scrollController.position.maxScrollExtent)) {
+        BlocProvider.of<MoviesBloc>(context).add(GetPopularMoviesEvent());
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MoviesBloc, MoviesState>(buildWhen: (previous, current) {
       return previous != current;
     }, builder: (context, state) {
-      if (state is LoadingGetPopularMoviesState) {
+      if (state is FirstLoadingGetPopularMoviesState) {
         return const SizedBox(
           height: 170,
           child: Center(
@@ -37,6 +54,7 @@ class PopularComponent extends StatelessWidget {
           child: SizedBox(
             height: 170.0,
             child: ListView.builder(
+              controller: scrollController,
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -47,10 +65,13 @@ class PopularComponent extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 8.0),
                   child: InkWell(
                     onTap: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) {
-                        return MovieDetailScreen(id: moviesList[index].id);
-                      }));
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return MovieDetailScreen(id: moviesList[index].id);
+                          },
+                        ),
+                      );
                     },
                     child: ClipRRect(
                       borderRadius:
@@ -90,7 +111,7 @@ class PopularComponent extends StatelessWidget {
                                   movie.title,
                                   textAlign: TextAlign.center,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.white, fontSize: 14),
                                 ),
                               ),

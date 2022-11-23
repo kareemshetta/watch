@@ -12,4 +12,11 @@ class GetNowPlayingMoviesEvent extends MoviesEvent {}
 
 class GetTopRatedMoviesEvent extends MoviesEvent {}
 
+class GetClearSearchedListEvent extends MoviesEvent {}
+
 class GetPopularMoviesEvent extends MoviesEvent {}
+
+class GetSearchForMovieMoviesEvent extends MoviesEvent {
+  final String movieName;
+  const GetSearchForMovieMoviesEvent(this.movieName);
+}

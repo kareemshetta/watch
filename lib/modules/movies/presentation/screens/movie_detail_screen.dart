@@ -6,11 +6,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:shimmer/shimmer.dart';
 import 'package:watch/core/utils/constants.dart';
-//import 'package:watch/core/utils/enums.dart';
 import 'package:watch/modules/movies/domain/entities/geners.dart';
 import 'package:watch/modules/movies/presentation/controllers/movie_detail_bloc.dart';
 
 import '../../../../core/services/service_locator.dart';
+import 'Search_screen.dart';
 
 class MovieDetailScreen extends StatelessWidget {
   final int id;
@@ -50,6 +50,27 @@ class MovieDetailContent extends StatelessWidget {
               key: const Key('movieDetailScrollView'),
               slivers: [
                 SliverAppBar(
+                  title: Text(movie.title,
+                      style: GoogleFonts.oleoScriptSwashCaps(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      )),
+                  actions: [
+                    IconButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return SearchScreen();
+                              },
+                            ),
+                          );
+                        },
+                        icon: Padding(
+                          padding: const EdgeInsets.only(right: 30),
+                          child: Icon(Icons.search),
+                        ))
+                  ],
                   pinned: true,
                   expandedHeight: 250.0,
                   flexibleSpace: FlexibleSpaceBar(
@@ -134,14 +155,6 @@ class MovieDetailContent extends StatelessWidget {
                                     ),
                                   ),
                                   const SizedBox(width: 4.0),
-                                  Text(
-                                    '(${movie.voteAverage})',
-                                    style: const TextStyle(
-                                      fontSize: 1.0,
-                                      fontWeight: FontWeight.w500,
-                                      letterSpacing: 1.2,
-                                    ),
-                                  ),
                                 ],
                               ),
                               const SizedBox(width: 16.0),
