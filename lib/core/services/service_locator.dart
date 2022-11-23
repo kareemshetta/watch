@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:watch/modules/movies/domain/usecase/base_use_case.dart';
 import 'package:watch/modules/movies/domain/usecase/get_movie_detail_ussecase.dart';
 import 'package:watch/modules/movies/domain/usecase/get_recommendation_use_case.dart';
+import 'package:watch/modules/movies/domain/usecase/get_search_for_movie_usecase.dart';
 import 'package:watch/modules/movies/presentation/controllers/movie_detail_bloc.dart';
 import './../../modules/./movies/data/datasources/remote_data_sources/movie_remote_data_sources.dart';
 import './../../modules/./movies/data/repository/movie_repository.dart';
@@ -16,11 +17,12 @@ final sl = GetIt.instance;
 class ServiceLocator {
   void init() {
     /// bloc every time you call movieBloc new instance will be  created
-    sl.registerFactory(() => MoviesBloc(sl(), sl(), sl()));
+    sl.registerFactory(() => MoviesBloc(sl(), sl(), sl(), sl()));
     sl.registerFactory(() => MovieDetailBloc(sl(), sl()));
 
     /// making GetNowPlayingUseCase singleton
     sl.registerLazySingleton(() => GetNowPlayingMoviesUseCase(sl()));
+    sl.registerLazySingleton(() => GETSearchForMovieUseCase(sl()));
 
     /// making GetNowPlayingUseCase singleton
     sl.registerLazySingleton(() => GetTopRatedMoviesUseCase(sl()));

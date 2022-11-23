@@ -10,11 +10,14 @@ import '../../../../core/network/models/failure.dart';
 
 abstract class BaseMovieRepository {
   Future<Either<Failure, List<Movie>>> getNowPlayingMovies();
-  Future<Either<Failure, List<Movie>>> getTopRatedMovies();
-  Future<Either<Failure, List<Movie>>> getPopularMovies();
+  Future<Either<Failure, List<Movie>>> getTopRatedMovies({int pageIndex = 1});
+  Future<Either<Failure, List<Movie>>> getPopularMovies({int pageIndex = 1});
   Future<Either<Failure, MovieDetailed>> getMovieDetail(
       MovieDetailParameter parameter);
 
   Future<Either<Failure, List<Movie>>> getRecommendationMovies(
       RecommendationParameter parameter);
+
+  Future<Either<Failure, List<Movie>>> searchForMovie(
+      {int pageIndex = 1, String movieName = ''});
 }

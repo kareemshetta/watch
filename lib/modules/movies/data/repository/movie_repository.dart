@@ -23,9 +23,11 @@ class MovieRepository extends BaseMovieRepository {
   }
 
   @override
-  Future<Either<Failure, List<Movie>>> getPopularMovies() async {
+  Future<Either<Failure, List<Movie>>> getPopularMovies(
+      {int pageIndex = 1}) async {
     try {
-      final movieList = await baseMovieRemoteDataSource.getPopularMovies();
+      final movieList = await baseMovieRemoteDataSource.getPopularMovies(
+          pageIndex: pageIndex);
       return right(movieList);
     } on RemoteException catch (failure) {
       return Left(RemoteFailure(failure.errorMessageModel.statusMessage));
@@ -33,9 +35,11 @@ class MovieRepository extends BaseMovieRepository {
   }
 
   @override
-  Future<Either<Failure, List<Movie>>> getTopRatedMovies() async {
+  Future<Either<Failure, List<Movie>>> getTopRatedMovies(
+      {int pageIndex = 1}) async {
     try {
-      final movieList = await baseMovieRemoteDataSource.getTopRatedMovies();
+      final movieList = await baseMovieRemoteDataSource.getTopRatedMovies(
+          pageIndex: pageIndex);
       return right(movieList);
     } on RemoteException catch (failure) {
       return Left(RemoteFailure(failure.errorMessageModel.statusMessage));
@@ -60,6 +64,18 @@ class MovieRepository extends BaseMovieRepository {
     try {
       final movieList =
           await baseMovieRemoteDataSource.getRecommendedMovies(parameter.id);
+      return right(movieList);
+    } on RemoteException catch (failure) {
+      return Left(RemoteFailure(failure.errorMessageModel.statusMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Movie>>> searchForMovie(
+      {int pageIndex = 1, String movieName = ''}) async {
+    try {
+      final movieList = await baseMovieRemoteDataSource.searchForMovie(
+          movieName: movieName, pageIndex: pageIndex);
       return right(movieList);
     } on RemoteException catch (failure) {
       return Left(RemoteFailure(failure.errorMessageModel.statusMessage));

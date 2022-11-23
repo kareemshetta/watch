@@ -8,9 +8,11 @@ import 'package:watch/modules/movies/domain/usecase/get_movie_detail_ussecase.da
 
 abstract class BaseMovieRemoteDataSource {
   Future<List<MovieModel>> getNowPlayingMovies();
-  Future<List<MovieModel>> getTopRatedMovies();
-  Future<List<MovieModel>> getPopularMovies();
+  Future<List<MovieModel>> getTopRatedMovies({int pageIndex = 1});
+  Future<List<MovieModel>> getPopularMovies({int pageIndex = 1});
   Future<List<MovieModel>> getRecommendedMovies(int id);
+  Future<List<MovieModel>> searchForMovie(
+      {int pageIndex = 1, String movieName = ''});
   Future<MovieDetailModel> getMovieDetails(MovieDetailParameter parameter);
 }
 
@@ -23,6 +25,7 @@ class MovieRemoteDataSource extends BaseMovieRemoteDataSource {
     if (response.statusCode == 200) {
       final dataList = (response.data['results'] as List<dynamic>);
       print(dataList);
+
       return dataList.map((movie) => MovieModel.fromJson(movie)).toList();
     } else {
       throw RemoteException(ErrorMessageModel.fromJson(response.data));
@@ -30,10 +33,12 @@ class MovieRemoteDataSource extends BaseMovieRemoteDataSource {
   }
 
   @override
-  Future<List<MovieModel>> getPopularMovies() async {
-    final response = await Dio().get(kPopularPath);
+  Future<List<MovieModel>> getPopularMovies({int pageIndex = 1}) async {
+    print('movieindex:$pageIndex');
+    final response = await Dio().get(getPopularPath(pageIndex: pageIndex));
     if (response.statusCode == 200) {
       final dataList = (response.data['results'] as List<dynamic>);
+      print('first:${dataList.first}');
       return dataList.map((movie) => MovieModel.fromJson(movie)).toList();
     } else {
       throw RemoteException(ErrorMessageModel.fromJson(response.data));
@@ -41,8 +46,8 @@ class MovieRemoteDataSource extends BaseMovieRemoteDataSource {
   }
 
   @override
-  Future<List<MovieModel>> getTopRatedMovies() async {
-    final response = await Dio().get(kTopRatedPath);
+  Future<List<MovieModel>> getTopRatedMovies({int pageIndex = 1}) async {
+    final response = await Dio().get(getTopRatedPath(pageIndex: pageIndex));
     if (response.statusCode == 200) {
       final dataList = (response.data['results'] as List<dynamic>);
       return dataList.map((movie) => MovieModel.fromJson(movie)).toList();
@@ -75,6 +80,20 @@ class MovieRemoteDataSource extends BaseMovieRemoteDataSource {
       print('datasource recommendation$dataList');
       return dataList.map((movie) => MovieModel.fromJson(movie)).toList();
     } else {
+      throw RemoteException(ErrorMessageModel.fromJson(response.data));
+    }
+  }
+
+  @override
+  Future<List<MovieModel>> searchForMovie(
+      {int pageIndex = 1, String movieName = ''}) async {
+    final response = await Dio()
+        .get(getSearchPath(pageIndex: pageIndex, movieName: movieName));
+    if (response.statusCode == 200) {
+      final dataList = (response.data['results'] as List<dynamic>);
+      return dataList.map((movie) => MovieModel.fromJson(movie)).toList();
+    } else {
+      print('errrorrrrrrr${response.data}');
       throw RemoteException(ErrorMessageModel.fromJson(response.data));
     }
   }

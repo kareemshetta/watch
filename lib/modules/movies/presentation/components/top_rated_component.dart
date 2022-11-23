@@ -16,7 +16,7 @@ class TopRatedComponent extends StatelessWidget {
     return BlocBuilder<MoviesBloc, MoviesState>(
         buildWhen: (previous, current) => previous != current,
         builder: (context, state) {
-          if (state is LoadingGetTopRatedMoviesState) {
+          if (state is FirstLoadingGetTopRatedMoviesState) {
             return const SizedBox(
               height: 170,
               child: Center(
